@@ -2,7 +2,6 @@
 "use client"
 
 import type React from "react"
-// +++ IMPORT useMemo and useCallback +++
 import { createContext, useContext, useEffect, useState, useMemo, useCallback } from "react"
 import type { User, Session } from "@supabase/supabase-js"
 import { createClient } from "@/lib/supabase/client"
@@ -47,7 +46,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return () => subscription.unsubscribe()
   }, [])
 
-  // +++ WRAP FUNCTIONS IN useCallback +++
   const signIn = useCallback(async (email: string, password: string) => {
     const { error } = await supabase.auth.signInWithPassword({ email, password })
     return { error }
@@ -66,9 +64,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     await supabase.auth.signOut()
   }, [])
 
-  // +++ WRAP THE CONTEXT VALUE IN useMemo +++
-  // This is the most important change. It ensures the value object only
-  // gets a new reference when the actual data inside it changes.
   const value = useMemo(
     () => ({
       user,
