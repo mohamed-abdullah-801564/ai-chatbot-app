@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import type React from 'react'
 import { useState, useRef, useEffect, useCallback } from 'react'
@@ -7,6 +7,7 @@ import { createClient } from '@/lib/supabase/client'
 import ReactMarkdown from 'react-markdown'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import {
   Send,
@@ -31,14 +32,12 @@ import {
   Camera,
   MoreHorizontal,
   Pencil,
-
-  Zap,
-  AlertTriangle,
-  Loader2,
-  Pen,
-  CreditCard,
-
-  Menu as MenuIcon,
+  Check,
+  Zap, // Added
+  AlertTriangle, // Added
+  Loader2, // Added
+  Pen, // Added
+  CreditCard, // Added for Profile Popover
 } from 'lucide-react'
 import {
   DropdownMenu,
@@ -69,7 +68,7 @@ import {
 import { useToast } from '@/components/ui/use-toast'
 import { useTheme } from 'next-themes'
 import { motion, AnimatePresence } from 'framer-motion'
-import { useChat } from '@ai-sdk/react'
+import { useChat } from 'ai/react'
 
 // Define interfaces at the top level
 interface Message {
@@ -225,8 +224,6 @@ export function Chatbot({ initialMessage, onBackToMainInput, onLogout, isGuest =
 
   // Initialize Vercel AI SDK useChat
   const { messages, input, setInput, append, isLoading, setMessages, handleSubmit: handleChatSubmit } = useChat({
-    streamProtocol: 'text',
-    api: '/api/chat',
     body: {
       aiMode,
       selectedLanguage
@@ -858,11 +855,52 @@ export function Chatbot({ initialMessage, onBackToMainInput, onLogout, isGuest =
               <Bot className='w-5 h-5 text-primary' />
               <span className='font-bold font-[var(--font-heading)]'>AI Chatbot</span>
             </div>
-
+            {/* Mode Selector */}
+            <DropdownMenu
+              open={showModeDropdown}
+              onOpenChange={setShowModeDropdown}
+            >
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" className="h-8 gap-2 ml-2 hidden sm:flex border-border bg-card">
+                  {modeConfig[aiMode].label} <ChevronDown className="w-3 h-3 opacity-50" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start">
+                {Object.entries(modeConfig).map(([mode, config]) => (
+                  <DropdownMenuItem
+                    key={mode}
+                    onClick={() => setAIMode(mode as AIMode)}
+                    className="gap-2"
+                  >
+                    {config.label} {aiMode === mode && <Check className="w-3 h-3 ml-auto" />}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
 
           <div className='flex items-center gap-2'>
-
+            {/* Language Selector */}
+            <DropdownMenu
+              open={showLanguageDropdown}
+              onOpenChange={setShowLanguageDropdown}
+            >
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                  <GlobeIcon className="w-4 h-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                {Object.entries(languageConfig).map(([key, config]) => (
+                  <DropdownMenuItem
+                    key={key}
+                    onClick={() => setSelectedLanguage(key as Language)}
+                  >
+                    {config.label} {selectedLanguage === key && <Check className="w-3 h-3 ml-auto" />}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
 
             <Button variant='ghost' size='icon' onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} className='text-muted-foreground hover:text-foreground'>
               {theme === "dark" ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
@@ -883,7 +921,7 @@ export function Chatbot({ initialMessage, onBackToMainInput, onLogout, isGuest =
                   </p>
                 </div>
               ) : (
-                messages.map((message: any) => (
+                messages.map((message) => (
                   <div
                     key={message.id}
                     className={`flex items-start gap-3 animate-in slide-in-from-bottom-2 duration-300 max-w-full mb-4 ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
@@ -1065,7 +1103,7 @@ export function Chatbot({ initialMessage, onBackToMainInput, onLogout, isGuest =
 
             {!isSupported && (
               <div className='text-[10px] text-center text-muted-foreground mt-2'>
-                âš ï¸ Voice input available on Chrome, Edge, Safari
+                ⚠️ Voice input available on Chrome, Edge, Safari
               </div>
             )}
           </div>
@@ -1094,5 +1132,231 @@ export function Chatbot({ initialMessage, onBackToMainInput, onLogout, isGuest =
         )}
       </div>
     </div>
+  )
+}
+<div className='pb-4'>
+  {messages.length === 0 ? (
+    <div className='text-center text-muted-foreground py-8'>
+      <p className='text-lg mb-2'>Welcome to AI Chatbot!</p>
+      <p className='break-words'>
+        Start a conversation by typing a message below or upload a file to summarize.
+      </p>
+    </div>
+  ) : (
+    messages.map((message) => (
+      <div
+        key={message.id}
+        className={`flex items-start gap-3 animate-in slide-in-from-bottom-2 duration-300 max-w-full mb-4 ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+      >
+        {message.role === 'assistant' && (
+          <div className='flex-shrink-0 w-8 h-8 rounded-full bg-muted flex items-center justify-center'>
+            <Bot className='h-4 w-4 text-muted-foreground' />
+          </div>
+        )}
+        <div className='flex flex-col max-w-[80%] min-w-0'>
+          {message.fileInfo && (
+            <div className='mb-2 p-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800'>
+              <div className='flex items-center gap-2 text-sm text-blue-700 dark:text-blue-300'>
+                <FileText className='h-4 w-4' />
+                <span className='font-medium break-words'>{message.fileInfo.name}</span>
+                <span className='text-xs opacity-70'>
+                  ({(message.fileInfo.size / 1024).toFixed(1)} KB)
+                </span>
+              </div>
+            </div>
+          )}
+          <div className={`rounded-lg px-4 py-2 shadow-sm max-w-full min-w-0 ${message.role === 'user' ? 'bg-blue-500 text-white rounded-br-sm' : 'bg-muted rounded-bl-sm'}`}>
+            <div className={`text-sm leading-relaxed break-words ${message.role === 'user' ? 'text-white' : theme === 'dark' ? 'text-white' : 'text-black'}`}>
+              <ReactMarkdown
+                components={{
+                  p: (props: any) => {
+                    const { node, ...rest } = props;
+                    return <p className="mb-2 last:mb-0" {...rest} />
+                  },
+                  ul: (props: any) => {
+                    const { node, ...rest } = props;
+                    return <ul className="list-disc pl-4 mb-2" {...rest} />
+                  },
+                  ol: (props: any) => {
+                    const { node, ...rest } = props;
+                    return <ol className="list-decimal pl-4 mb-2" {...rest} />
+                  },
+                  li: (props: any) => {
+                    const { node, ...rest } = props;
+                    return <li className="mb-1" {...rest} />
+                  },
+                  code: ({ node, className, children, ...props }: any) => {
+                    const match = /language-(\w+)/.exec(className || '')
+                    return !className?.includes('language-') ? (
+                      <code className="bg-black/10 dark:bg-white/10 rounded px-1 py-0.5" {...props}>
+                        {children}
+                      </code>
+                    ) : (
+                      <pre className="bg-slate-950 dark:bg-slate-900 p-4 rounded-lg overflow-x-auto my-2 text-white">
+                        <code className={className} {...props}>
+                          {children}
+                        </code>
+                      </pre>
+                    )
+                  },
+                }}
+              >
+                {message.content}
+              </ReactMarkdown>
+            </div>
+          </div>
+          <p className='text-xs text-gray-500 dark:text-gray-400 mt-1 px-1 break-words'>
+            {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })}
+          </p>
+        </div>
+        {message.role === 'user' && (
+          <div className='flex-shrink-0 w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center'>
+            <User className='h-4 w-4 text-white' />
+          </div>
+        )}
+      </div>
+    ))
+  )}
+  {isLoading && (
+    <div className='flex items-start gap-3 animate-in slide-in-from-bottom-2 duration-300 max-w-full mb-4'>
+      <div className='flex-shrink-0 w-8 h-8 rounded-full bg-muted flex items-center justify-center'>
+        <Bot className='h-4 w-4 text-muted-foreground' />
+      </div>
+      <div className='max-w-[80%] min-w-0 rounded-lg px-4 py-2 bg-muted text-foreground shadow-sm rounded-bl-sm'>
+        <div className='flex items-center space-x-2'>
+          <div className='flex space-x-1'>
+            <div className='w-2 h-2 bg-current rounded-full animate-bounce [animation-delay:-0.3s]'></div>
+            <div className='w-2 h-2 bg-current rounded-full animate-bounce [animation-delay:-0.15s]'></div>
+            <div className='w-2 h-2 bg-current rounded-full animate-bounce'></div>
+          </div>
+          <span className='text-sm break-words'>AI is typing...</span>
+        </div>
+      </div>
+    </div>
+  )}
+</div>
+            </ScrollArea >
+          </div >
+        </CardContent >
+  {/* Input Area */ }
+  < div className = 'flex-none border-t bg-card p-4' >
+    <div className="max-w-4xl mx-auto w-full">
+      {selectedFile && (
+        <div className='flex items-center gap-2 mb-3 animate-in fade-in slide-in-from-bottom-1'>
+          <div className="bg-muted border border-border rounded-full pl-3 pr-2 py-1.5 flex items-center gap-2 max-w-[200px]">
+            <FileText className='h-3.5 w-3.5 text-primary' />
+            <span className='text-xs font-medium truncate flex-1'>{selectedFile.name}</span>
+            <button onClick={removeSelectedFile} className="hover:bg-background rounded-full p-0.5 transition-colors">
+              <X className='h-3.5 w-3.5 text-muted-foreground' />
+            </button>
+          </div>
+          <Button size='sm' variant="secondary" onClick={processFileAndSummarize} disabled={isProcessingFile} className='h-7 text-xs rounded-full'>
+            {isProcessingFile ? 'Processing...' : 'Summarize File'}
+          </Button>
+        </div>
+      )}
+
+      <div className='flex flex-col sm:flex-row gap-2 mb-2'>
+        {/* Mode Selectors */}
+        <div className="flex gap-2 overflow-x-auto pb-1 no-scrollbar">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant='outline' size="sm" className='h-8 text-xs gap-1.5'>
+                {modeConfig[aiMode].label}
+                <ChevronDown className="h-3 w-3 opacity-50" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              {(Object.keys(modeConfig) as AIMode[]).map((mode) => (
+                <DropdownMenuItem key={mode} onClick={() => setAIMode(mode)}>
+                  {modeConfig[mode].label}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          {aiMode === 'translate' && (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant='outline' size="sm" className='h-8 text-xs gap-1.5'>
+                  {languageConfig[selectedLanguage].label}
+                  <ChevronDown className="h-3 w-3 opacity-50" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="max-h-[200px] overflow-y-auto">
+                {(Object.keys(languageConfig) as Language[]).map((lang) => (
+                  <DropdownMenuItem key={lang} onClick={() => setSelectedLanguage(lang)}>
+                    {languageConfig[lang].label}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
+        </div>
+        <div className="flex-1" />
+        <div className="flex gap-2">
+          <Button variant='ghost' size="sm" onClick={() => fileInputRef.current?.click()} className='h-8 text-xs text-muted-foreground'>
+            <Upload className='h-3.5 w-3.5 mr-1.5' />
+            Upload
+          </Button>
+          <Button variant='ghost' size="sm" onClick={handleCameraCapture} className='h-8 text-xs text-muted-foreground'>
+            <Camera className='h-3.5 w-3.5 mr-1.5' />
+            Photo
+          </Button>
+        </div>
+      </div>
+
+      <form onSubmit={handleSubmit} className='relative flex items-end gap-2 bg-muted/50 p-2 rounded-xl border focus-within:ring-1 focus-within:ring-ring focus-within:border-ring transition-all'>
+        <Input
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyPress={handleKeyPress}
+          placeholder={'Type your message here...'}
+          disabled={isLoading || isProcessingFile}
+          className='flex-1 border-0 bg-transparent focus-visible:ring-0 px-2 py-2 h-auto min-h-[44px]'
+        />
+        <div className="flex items-center gap-1 pb-1">
+          <Button type='button' variant='ghost' size='icon' onClick={handleVoiceInput} disabled={isLoading || isProcessingFile} className={`h-8 w-8 rounded-lg ${isListening ? 'text-red-500 bg-red-500/10' : 'text-muted-foreground'}`}>
+            {isListening ? <MicOff className='h-4 w-4' /> : <Mic className='h-4 w-4' />}
+          </Button>
+          <Button type='submit' disabled={!input.trim() || isLoading || isProcessingFile} className="h-8 w-8 rounded-lg">
+            <Send className='h-4 w-4' />
+          </Button>
+        </div>
+      </form>
+
+      {!isSupported && (
+        <div className='text-[10px] text-center text-muted-foreground mt-2'>
+          ⚠️ Voice input available on Chrome, Edge, Safari
+        </div>
+      )}
+    </div>
+        </div >
+
+  <input ref={fileInputRef} type='file' accept='.txt,.pdf,.docx,image/*' onChange={handleFileSelect} className='hidden' />
+
+{/* Camera Modal */ }
+{
+  isCameraActive && (
+    <div className='fixed inset-0 bg-black/80 flex items-center justify-center z-50 backdrop-blur-sm'>
+      <div className='bg-background rounded-xl p-4 max-w-md w-full mx-4 shadow-2xl'>
+        <div className='flex justify-between items-center mb-4'>
+          <h3 className='text-lg font-semibold'>Take Photo</h3>
+          <Button variant='ghost' size="icon" onClick={closeCameraModal}><X className='h-4 w-4' /></Button>
+        </div>
+        <div className='relative mb-4 rounded-lg overflow-hidden bg-black aspect-video'>
+          <video ref={videoRef} className='w-full h-full object-cover' autoPlay playsInline muted />
+          <canvas ref={canvasRef} className='hidden' />
+        </div>
+        <div className='flex gap-2 justify-center'>
+          <Button onClick={capturePhoto} className='flex-1'><Camera className='h-4 w-4 mr-2' />Capture</Button>
+          <Button variant='outline' onClick={closeCameraModal}>Cancel</Button>
+        </div>
+      </div>
+    </div>
+  )
+}
+      </div >
+    </div >
   )
 }

@@ -3,6 +3,7 @@
 import type React from 'react'
 import { useState } from 'react'
 import { useAuth } from '@/contexts/auth-context'
+import { createClient } from '@/lib/supabase/client'
 import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -55,6 +56,46 @@ export function SignUp({ onSwitchToSignIn, onBack }: SignUpProps) {
     if (signUpError) {
       setError(signUpError.message)
       setIsLoading(false)
+    } else {
+      // Migrate Guest Messages if any
+      try {
+        const guestMessagesJson = localStorage.getItem("guestMessages")
+        if (guestMessagesJson) {
+          const guestMessages = JSON.parse(guestMessagesJson)
+          if (Array.isArray(guestMessages) && guestMessages.length > 0) {
+            const supabase = createClient()
+            const { data: { user } } = await supabase.auth.getUser()
+
+            if (user) {
+              // Create conversation
+              const { data: conversation, error: convError } = await supabase
+                .from('conversations')
+                .insert({
+                  user_id: user.id,
+                  title: "Guest Chat History"
+                })
+                .select()
+                .single()
+
+              if (conversation && !convError) {
+                // Insert messages
+                const messagesToInsert = guestMessages.map((msg: any) => ({
+                  conversation_id: conversation.id,
+                  user_id: user.id,
+                  content: msg.content,
+                  role: msg.sender === 'user' ? 'user' : 'assistant', // Map guest chat 'ai'/'user' to 'assistant'/'user'
+                  created_at: msg.timestamp || new Date().toISOString()
+                }))
+
+                await supabase.from('messages').insert(messagesToInsert)
+                localStorage.removeItem("guestMessages")
+              }
+            }
+          }
+        }
+      } catch (migrationError) {
+        console.error("Failed to migrate guest messages", migrationError)
+      }
     }
   }
 

@@ -30,14 +30,6 @@ export default function Home() {
     setAppState("sign-in")
   }, [])
 
-  const handleSignIn = useCallback(() => {
-    setAppState("chat")
-  }, [])
-
-  const handleSignUp = useCallback(() => {
-    setAppState("chat")
-  }, [])
-
   const handleBackToLanding = useCallback(() => {
     setAppState("landing")
   }, [])
@@ -103,11 +95,11 @@ export default function Home() {
   }
 
   if (appState === "sign-in") {
-    return <SignIn onSignIn={handleSignIn} onSwitchToSignUp={handleSwitchToSignUp} onBack={handleBackToLanding} />
+    return <SignIn onSwitchToSignUp={handleSwitchToSignUp} onBack={handleBackToLanding} />
   }
 
   if (appState === "sign-up") {
-    return <SignUp onSignUp={handleSignUp} onSwitchToSignIn={handleSwitchToSignIn} onBack={handleBackToLanding} />
+    return <SignUp onSwitchToSignIn={handleSwitchToSignIn} onBack={handleBackToLanding} />
   }
 
   if (appState === "guest-dashboard") {

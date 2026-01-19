@@ -1,9 +1,10 @@
 "use client"
 
 import type React from "react"
-import type SpeechRecognition from "speech-recognition"
+
 
 import { useState, useRef, useEffect } from "react"
+import { useChat } from '@ai-sdk/react'
 import { motion, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -16,6 +17,38 @@ interface Message {
   content: string
   sender: "user" | "ai"
   timestamp: Date
+}
+
+interface SpeechRecognitionResult {
+  isFinal: boolean;
+  [key: number]: {
+    transcript: string;
+  };
+}
+
+interface SpeechRecognitionResultList {
+  [key: number]: SpeechRecognitionResult;
+  length: number;
+}
+
+interface SpeechRecognitionEvent extends Event {
+  results: SpeechRecognitionResultList;
+  resultIndex: number;
+}
+
+interface SpeechRecognitionErrorEvent extends Event {
+  error: string;
+}
+
+interface CustomSpeechRecognition extends EventTarget {
+  continuous: boolean;
+  interimResults: boolean;
+  lang: string;
+  start(): void;
+  stop(): void;
+  onresult: (event: SpeechRecognitionEvent) => void;
+  onerror: (event: SpeechRecognitionErrorEvent) => void;
+  onend: () => void;
 }
 
 interface GuestChatProps {
@@ -35,11 +68,10 @@ const languageConfig = {
 }
 
 export function GuestChat({ initialMessage, onBack, onSignUp }: GuestChatProps) {
-  const [messages, setMessages] = useState<Message[]>([])
+  // Re-declare state variables needed for voice/other UI that were part of the big block replaced
   const [inputValue, setInputValue] = useState("")
-  const [isLoading, setIsLoading] = useState(false)
   const [isListening, setIsListening] = useState(false)
-  const [recognition, setRecognition] = useState<SpeechRecognition | null>(null)
+  const [recognition, setRecognition] = useState<CustomSpeechRecognition | null>(null)
   const [promptCount, setPromptCount] = useState(0)
   const [hasReachedLimit, setHasReachedLimit] = useState(false)
   const [selectedLanguage, setSelectedLanguage] = useState<keyof typeof languageConfig>("english")
@@ -47,6 +79,42 @@ export function GuestChat({ initialMessage, onBack, onSignUp }: GuestChatProps) 
   const scrollAreaRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const initialMessageSentRef = useRef(false)
+  // useChat hook from Vercel AI SDK
+  const { messages, input, setInput, append, isLoading, setMessages, handleSubmit } = useChat({
+    streamProtocol: 'text',
+    api: '/api/chat',
+    body: {
+      aiMode: "normal",
+      selectedLanguage: selectedLanguage,
+    },
+    onFinish: () => {
+      const newPromptCount = promptCount + 1
+      setPromptCount(newPromptCount)
+      localStorage.setItem("guestPromptCount", newPromptCount.toString())
+      if (newPromptCount >= 2) {
+        setHasReachedLimit(true)
+      }
+    },
+    onError: (error) => {
+      console.error("Chat error:", error)
+      // Optional: Add a system message for error?
+    }
+  })
+
+  // Set input for useChat when voice changes it
+  useEffect(() => {
+    if (inputValue !== input) {
+      setInput(inputValue)
+    }
+  }, [inputValue, setInput])
+
+  // Sync useChat input back to local inputValue (bi-directional for Voice/UI sync)
+  useEffect(() => {
+    if (input !== inputValue) {
+      setInputValue(input)
+    }
+  }, [input])
+
 
   // Load prompt count from local storage
   useEffect(() => {
@@ -57,32 +125,6 @@ export function GuestChat({ initialMessage, onBack, onSignUp }: GuestChatProps) 
       if (count >= 2) setHasReachedLimit(true)
     }
   }, [])
-
-  useEffect(() => {
-    if (typeof window !== "undefined" && ("webkitSpeechRecognition" in window || "SpeechRecognition" in window)) {
-      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition
-      const recognitionInstance = new SpeechRecognition()
-
-      recognitionInstance.continuous = false
-      recognitionInstance.interimResults = true
-      recognitionInstance.lang = languageConfig[selectedLanguage].code
-
-      recognitionInstance.onresult = (event) => {
-        const transcript = Array.from(event.results)
-          .map((result) => result[0])
-          .map((result) => result.transcript)
-          .join("")
-
-        setInputValue(transcript)
-      }
-
-      recognitionInstance.onend = () => {
-        setIsListening(false)
-      }
-
-      setRecognition(recognitionInstance)
-    }
-  }, [selectedLanguage])
 
   // Process initial message
   useEffect(() => {
@@ -98,64 +140,14 @@ export function GuestChat({ initialMessage, onBack, onSignUp }: GuestChatProps) 
       }
 
       initialMessageSentRef.current = true
-      const userMessage: Message = {
-        id: Date.now().toString(),
-        content: initialMessage,
-        sender: "user",
-        timestamp: new Date(),
-      }
-      setMessages([userMessage])
 
-      const newPromptCount = currentCount + 1
-      setPromptCount(newPromptCount)
-      localStorage.setItem("guestPromptCount", newPromptCount.toString())
-
-      setIsLoading(true)
-      const sendInitialMessage = async () => {
-        try {
-          const response = await fetch("/api/chat", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              query: initialMessage,
-              messages: [],
-              aiMode: "normal",
-              selectedLanguage: selectedLanguage,
-            }),
-          })
-
-          const data = await response.json()
-
-          if (!response.ok) {
-            throw new Error(data.error || "Failed to get response from AI")
-          }
-
-          const aiMessage: Message = {
-            id: (Date.now() + 1).toString(),
-            content: data.response,
-            sender: "ai",
-            timestamp: new Date(),
-          }
-          setMessages((prev) => [...prev, aiMessage])
-        } catch (error) {
-          console.error("Error sending initial message:", error)
-          const errorMessage: Message = {
-            id: (Date.now() + 1).toString(),
-            content: "Sorry, I encountered an error. Please try again.",
-            sender: "ai",
-            timestamp: new Date(),
-          }
-          setMessages((prev) => [...prev, errorMessage])
-        } finally {
-          setIsLoading(false)
-        }
-      }
-
-      sendInitialMessage()
+      // Use append to send the initial message
+      append({
+        role: 'user',
+        content: initialMessage
+      })
     }
-  }, [initialMessage, selectedLanguage])
+  }, [initialMessage, append]) // Added append to deps
 
   // Auto-scroll to bottom
   useEffect(() => {
@@ -167,78 +159,17 @@ export function GuestChat({ initialMessage, onBack, onSignUp }: GuestChatProps) 
     }
   }, [messages])
 
-  const handleSubmit = (e: React.FormEvent) => {
+
+  const onFormSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    if (!inputValue.trim() || hasReachedLimit) return
+    if (!input.trim() || hasReachedLimit) return
 
     if (promptCount >= 2) {
       setHasReachedLimit(true)
       return
     }
 
-    const userMessage: Message = {
-      id: Date.now().toString(),
-      content: inputValue.trim(),
-      sender: "user",
-      timestamp: new Date(),
-    }
-
-    setMessages((prev) => [...prev, userMessage])
-    const currentInput = inputValue.trim()
-    setInputValue("")
-    setIsLoading(true)
-
-    const newPromptCount = promptCount + 1
-    setPromptCount(newPromptCount)
-    localStorage.setItem("guestPromptCount", newPromptCount.toString())
-
-    const sendMessage = async () => {
-      try {
-        const response = await fetch("/api/chat", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            query: currentInput,
-            messages: messages,
-            aiMode: "normal",
-            selectedLanguage: selectedLanguage,
-          }),
-        })
-
-        const data = await response.json()
-
-        if (!response.ok) {
-          throw new Error(data.error || "Failed to get response from AI")
-        }
-
-        const aiMessage: Message = {
-          id: (Date.now() + 1).toString(),
-          content: data.response,
-          sender: "ai",
-          timestamp: new Date(),
-        }
-        setMessages((prev) => [...prev, aiMessage])
-
-        if (newPromptCount >= 2) {
-          setHasReachedLimit(true)
-        }
-      } catch (error) {
-        console.error("Error sending message:", error)
-        const errorMessage: Message = {
-          id: (Date.now() + 1).toString(),
-          content: "Sorry, I encountered an error. Please try again.",
-          sender: "ai",
-          timestamp: new Date(),
-        }
-        setMessages((prev) => [...prev, errorMessage])
-      } finally {
-        setIsLoading(false)
-      }
-    }
-
-    sendMessage()
+    handleSubmit(e)
   }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -296,35 +227,35 @@ export function GuestChat({ initialMessage, onBack, onSignUp }: GuestChatProps) 
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
                   transition={{ duration: 0.3 }}
-                  className={`flex gap-4 ${message.sender === "user" ? "justify-end" : "justify-start"}`}
+                  className={`flex gap-4 ${message.role === "user" ? "justify-end" : "justify-start"}`}
                 >
-                  {message.sender === "ai" && (
+                  {message.role === "assistant" && (
                     <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
                       <Bot className="w-4 h-4 text-white" />
                     </div>
                   )}
 
                   <Card
-                    className={`max-w-[70%] border ${message.sender === "user" ? "bg-blue-600 text-white border-blue-600" : "bg-white border-gray-200"
+                    className={`max-w-[70%] border ${message.role === "user" ? "bg-blue-600 text-white border-blue-600" : "bg-white border-gray-200"
                       }`}
                   >
                     <div className="p-4">
                       <p
-                        className={`text-sm leading-relaxed whitespace-pre-wrap break-words font-[var(--font-body)] ${message.sender === "user" ? "text-white" : "text-black"
+                        className={`text-sm leading-relaxed whitespace-pre-wrap break-words font-[var(--font-body)] ${message.role === "user" ? "text-white" : "text-black"
                           }`}
                       >
                         {message.content}
                       </p>
                       <span
-                        className={`text-xs mt-2 block ${message.sender === "user" ? "text-blue-100" : "text-gray-500"
+                        className={`text-xs mt-2 block ${message.role === "user" ? "text-blue-100" : "text-gray-500"
                           }`}
                       >
-                        {message.timestamp.toLocaleTimeString()}
+                        {message.createdAt ? new Date(message.createdAt).toLocaleTimeString() : ''}
                       </span>
                     </div>
                   </Card>
 
-                  {message.sender === "user" && (
+                  {message.role === "user" && (
                     <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center flex-shrink-0">
                       <User className="w-4 h-4 text-gray-600" />
                     </div>
