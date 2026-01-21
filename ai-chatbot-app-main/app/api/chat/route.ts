@@ -50,6 +50,41 @@ export async function POST(request: NextRequest) {
     // 5. Check Session
     const { data: { user } } = await supabase.auth.getUser()
 
+    if (user) {
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', user.id)
+        .single()
+
+      if (profile) {
+        // 1. Calculate Today (UTC)
+        const today = new Date().toISOString().split('T')[0];
+
+        // 2. Check for Reset
+        if (!profile.daily_prompts_reset_date || profile.daily_prompts_reset_date !== today) {
+          console.log(`[RESET] Old Date: ${profile.daily_prompts_reset_date}, New Date: ${today}`);
+
+          // Update DB
+          await supabase.from('profiles').update({
+            daily_prompts_used: 0,
+            daily_prompts_reset_date: today
+          }).eq('id', user.id);
+
+          // CRITICAL: Update local variable so the limit check passes!
+          profile.daily_prompts_used = 0;
+        }
+
+        // 3. Check Limit
+        if (profile.tier === 'free' && profile.daily_prompts_used >= 5) {
+          return NextResponse.json(
+            { error: "Limit Reached. You have used your 5 free daily prompts." },
+            { status: 403 }
+          );
+        }
+      }
+    }
+
     // 6. Define System Instructions
     let systemInstruction = "You are a helpful AI assistant.";
     if (aiMode === "translate") {

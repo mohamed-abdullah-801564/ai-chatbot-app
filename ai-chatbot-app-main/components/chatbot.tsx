@@ -39,6 +39,7 @@ import {
   CreditCard,
 
   Menu as MenuIcon,
+  ArrowDown,
 } from 'lucide-react'
 import {
   DropdownMenu,
@@ -216,7 +217,9 @@ export function Chatbot({ initialMessage, onBackToMainInput, onLogout, isGuest =
   // Profile & Limit State
   const [userProfile, setUserProfile] = useState<{ daily_prompts_used: number, subscription_tier: 'free' | 'pro' | 'admin' } | null>(null)
   const [isLimitModalOpen, setIsLimitModalOpen] = useState(false)
+
   const [isLoadingProfile, setIsLoadingProfile] = useState(true)
+  const [showScrollButton, setShowScrollButton] = useState(false)
 
   const { toast } = useToast()
   const { user } = useAuth()
@@ -337,12 +340,47 @@ export function Chatbot({ initialMessage, onBackToMainInput, onLogout, isGuest =
   const { theme, setTheme } = useTheme()
   const initialMessageSentRef = useRef(false)
 
+  const scrollToBottom = () => {
+    if (scrollAreaRef.current) {
+      scrollAreaRef.current.scrollTo({ top: scrollAreaRef.current.scrollHeight, behavior: 'smooth' })
+    }
+  }
+
+  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
+    const isAtBottom = scrollHeight - scrollTop - clientHeight < 50;
+    setShowScrollButton(!isAtBottom);
+  }
+
+  // Auto-scroll logic
+  useEffect(() => {
+    const lastMessage = messages[messages.length - 1];
+    if (!lastMessage) return;
+
+    // Always scroll for user's own messages
+    if (lastMessage.role === 'user') {
+      scrollToBottom();
+      return;
+    }
+
+    // For AI messages, scroll only if already near bottom (button is hidden)
+    if (!showScrollButton) {
+      scrollToBottom();
+    }
+  }, [messages]) // Intentionally not including showScrollButton to avoid loops
+
   const handleVoiceInput = () => {
     if (isListening) {
       stopListening()
     } else {
       startListening((transcript) => {
-        setInput(transcript)
+        setInput((prev) => {
+          // Avoid appending if the new transcript is just a substring/duplicate update of what we just added
+          // Ideally the hook handles 'final' vs 'interim' but for now we append safely
+          const trimmedPrev = prev.trim();
+          if (!trimmedPrev) return transcript;
+          return trimmedPrev + ' ' + transcript;
+        });
       }, () => { })
     }
   }
@@ -872,8 +910,8 @@ export function Chatbot({ initialMessage, onBackToMainInput, onLogout, isGuest =
             </Button>
           </div>
         </header>
-        <div className='flex-1 flex flex-col p-0 min-h-0 overflow-hidden'>
-          <ScrollArea className='h-full px-6' ref={scrollAreaRef}>
+        <div className='relative flex-1 flex flex-col p-0 min-h-0 overflow-hidden'>
+          <div className='h-full w-full overflow-y-auto px-6' ref={scrollAreaRef} onScroll={handleScroll}>
             <div className='pb-4'>
               {messages.length === 0 ? (
                 <div className='text-center text-muted-foreground py-8'>
@@ -973,7 +1011,21 @@ export function Chatbot({ initialMessage, onBackToMainInput, onLogout, isGuest =
                 </div>
               )}
             </div>
-          </ScrollArea>
+          </div>
+
+          <AnimatePresence>
+            {showScrollButton && (
+              <motion.button
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 10 }}
+                onClick={scrollToBottom}
+                className="absolute bottom-20 right-6 z-50 bg-background text-foreground border border-border shadow-lg hover:bg-muted transition-colors h-10 w-10 flex items-center justify-center rounded-full"
+              >
+                <ArrowDown className="w-5 h-5" />
+              </motion.button>
+            )}
+          </AnimatePresence>
         </div>
 
         {/* Input Area */}
@@ -1074,25 +1126,27 @@ export function Chatbot({ initialMessage, onBackToMainInput, onLogout, isGuest =
         <input ref={fileInputRef} type='file' accept='.txt,.pdf,.docx,image/*' onChange={handleFileSelect} className='hidden' />
 
         {/* Camera Modal */}
-        {isCameraActive && (
-          <div className='fixed inset-0 bg-black/80 flex items-center justify-center z-50 backdrop-blur-sm'>
-            <div className='bg-background rounded-xl p-4 max-w-md w-full mx-4 shadow-2xl'>
-              <div className='flex justify-between items-center mb-4'>
-                <h3 className='text-lg font-semibold'>Take Photo</h3>
-                <Button variant='ghost' size="icon" onClick={closeCameraModal}><X className='h-4 w-4' /></Button>
-              </div>
-              <div className='relative mb-4 rounded-lg overflow-hidden bg-black aspect-video'>
-                <video ref={videoRef} className='w-full h-full object-cover' autoPlay playsInline muted />
-                <canvas ref={canvasRef} className='hidden' />
-              </div>
-              <div className='flex gap-2 justify-center'>
-                <Button onClick={capturePhoto} className='flex-1'><Camera className='h-4 w-4 mr-2' />Capture</Button>
-                <Button variant='outline' onClick={closeCameraModal}>Cancel</Button>
+        {
+          isCameraActive && (
+            <div className='fixed inset-0 bg-black/80 flex items-center justify-center z-50 backdrop-blur-sm'>
+              <div className='bg-background rounded-xl p-4 max-w-md w-full mx-4 shadow-2xl'>
+                <div className='flex justify-between items-center mb-4'>
+                  <h3 className='text-lg font-semibold'>Take Photo</h3>
+                  <Button variant='ghost' size="icon" onClick={closeCameraModal}><X className='h-4 w-4' /></Button>
+                </div>
+                <div className='relative mb-4 rounded-lg overflow-hidden bg-black aspect-video'>
+                  <video ref={videoRef} className='w-full h-full object-cover' autoPlay playsInline muted />
+                  <canvas ref={canvasRef} className='hidden' />
+                </div>
+                <div className='flex gap-2 justify-center'>
+                  <Button onClick={capturePhoto} className='flex-1'><Camera className='h-4 w-4 mr-2' />Capture</Button>
+                  <Button variant='outline' onClick={closeCameraModal}>Cancel</Button>
+                </div>
               </div>
             </div>
-          </div>
-        )}
-      </div>
-    </div>
+          )
+        }
+      </div >
+    </div >
   )
 }
