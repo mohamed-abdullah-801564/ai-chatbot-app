@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Contact - The Celestial Void</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "error-container": "#7f2927",
+                        "surface-container-low": "#131313",
+                        "surface-variant": "#262626",
+                        "primary-dim": "#b8b9b9",
+                        "inverse-surface": "#f9f9f9",
+                        "on-surface": "#e5e5e5",
+                        "error-dim": "#bb5551",
+                        "on-surface-variant": "#ababab",
+                        "tertiary-fixed": "#2b70fd",
+                        "on-secondary-container": "#c1bfbe",
+                        "on-background": "#e5e5e5",
+                        "tertiary-fixed-dim": "#1063f0",
+                        "surface": "#0e0e0e",
+                        "on-tertiary-fixed": "#ffffff",
+                        "tertiary": "#749aff",
+                        "on-secondary-fixed": "#403f3f",
+                        "primary-fixed-dim": "#d4d4d4",
+                        "error": "#ee7d77",
+                        "outline": "#757575",
+                        "on-tertiary-fixed-variant": "#edefff",
+                        "surface-tint": "#c6c6c7",
+                        "on-primary-fixed-variant": "#5a5c5c",
+                        "on-primary-fixed": "#3e4040",
+                        "inverse-on-surface": "#555555",
+                        "primary": "#c6c6c7",
+                        "secondary-fixed-dim": "#d7d4d3",
+                        "surface-bright": "#2c2c2c",
+                        "on-error-container": "#ff9993",
+                        "on-error": "#490106",
+                        "secondary": "#9f9d9d",
+                        "surface-dim": "#0e0e0e",
+                        "primary-container": "#454747",
+                        "surface-container-highest": "#262626",
+                        "surface-container": "#191919",
+                        "background": "#0e0e0e",
+                        "inverse-primary": "#5e5f60",
+                        "secondary-fixed": "#e5e2e1",
+                        "on-secondary": "#202020",
+                        "surface-container-lowest": "#000000",
+                        "on-tertiary-container": "#000000",
+                        "on-secondary-fixed-variant": "#5c5b5b",
+                        "secondary-dim": "#9f9d9d",
+                        "on-primary-container": "#d0d0d0",
+                        "surface-container-high": "#1f1f1f",
+                        "primary-fixed": "#e2e2e2",
+                        "tertiary-dim": "#226bf8",
+                        "secondary-container": "#3c3b3b",
+                        "on-tertiary": "#001c52",
+                        "on-primary": "#3f4041",
+                        "tertiary-container": "#2b70fd",
+                        "outline-variant": "#484848"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "fontFamily": {
+                        "headline": ["Inter", "sans-serif"],
+                        "body": ["Inter", "sans-serif"],
+                        "label": ["Inter", "sans-serif"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        /* Base typography rules from design system */
+        .tracking-tight-heading { letter-spacing: -0.04em; }
+        .tracking-tight-body { letter-spacing: -0.01em; }
+        
+        /* Remove default input styling for the custom underline look */
+        input:focus, textarea:focus { outline: none; box-shadow: none; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body tracking-tight-body min-h-screen flex flex-col relative overflow-x-hidden selection:bg-primary-container selection:text-on-primary-container">
+<!-- Ambient Glow Texture -->
+<div class="fixed top-[-10%] right-[-10%] w-[800px] h-[800px] bg-tertiary/10 rounded-full blur-[150px] pointer-events-none z-0"></div>
+<!-- TopNavBar -->
+<header class="bg-[#191919]/70 dark:bg-[#191919]/70 backdrop-blur-2xl fixed top-0 left-0 w-full z-50 h-20 shadow-[0_0_64px_rgba(0,0,0,0.5)] border-none">
+<div class="flex justify-between items-center w-full px-12 max-w-[1920px] mx-auto h-full">
+<div class="text-2xl font-black tracking-[-0.06em] text-[#c6c6c7] dark:text-white">
+                VOID
+            </div>
+<nav class="hidden md:flex items-center gap-8 font-['Inter'] tracking-[-0.04em] text-sm uppercase">
+<a class="text-[#ababab] dark:text-[#ababab] transition-colors hover:text-white hover:bg-white/5 rounded-md px-3 py-1 transition-all duration-500" href="#">Home</a>
+<a class="text-[#ababab] dark:text-[#ababab] transition-colors hover:text-white hover:bg-white/5 rounded-md px-3 py-1 transition-all duration-500" href="#">Features</a>
+<a class="text-[#ababab] dark:text-[#ababab] transition-colors hover:text-white hover:bg-white/5 rounded-md px-3 py-1 transition-all duration-500" href="#">Pricing</a>
+<!-- Active State -->
+<a class="text-[#c6c6c7] dark:text-white border-b border-[#c6c6c7]/30 pb-1 hover:text-white hover:bg-white/5 rounded-md px-3 pt-1 transition-all duration-500" href="#">Contact</a>
+</nav>
+<div class="flex items-center gap-4">
+<button class="hidden md:block bg-transparent text-[#c6c6c7] dark:text-[#c6c6c7] font-['Inter'] tracking-[-0.04em] text-sm uppercase hover:text-white hover:bg-white/5 rounded-md px-3 py-1 transition-all duration-500">
+                    Get Access
+                </button>
+<button class="text-[#c6c6c7] dark:text-[#c6c6c7] hover:text-white hover:bg-white/5 rounded-md px-2 py-1 transition-all duration-500">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-grow pt-48 pb-32 px-6 md:px-12 w-full max-w-[1920px] mx-auto relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-8 items-start">
+<!-- Left Column: Editorial Statement -->
+<div class="lg:col-span-5 lg:sticky top-48 flex flex-col gap-12">
+<div>
+<h1 class="font-headline text-6xl md:text-8xl xl:text-9xl font-bold tracking-tight-heading text-primary leading-[0.9]">
+                    INITIATE<br/>CONTACT
+                </h1>
+<p class="mt-8 text-on-surface-variant text-lg md:text-xl font-light leading-relaxed max-w-md">
+                    For editorial commissions, structural inquiries, or to request access to the deeper framework, submit your coordinates below. We operate in the quiet spaces.
+                </p>
+</div>
+<!-- Contact Details Grid (Bento Style) -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
+<div class="bg-surface-container-low rounded-xl p-8 transition-colors duration-500 hover:bg-surface-container-highest group">
+<span class="material-symbols-outlined text-on-surface-variant mb-6 text-3xl group-hover:text-primary transition-colors duration-300" style="font-variation-settings: 'FILL' 0;">mail</span>
+<h3 class="font-headline text-sm uppercase tracking-tight-heading text-on-surface-variant mb-2">Direct Channel</h3>
+<p class="text-on-surface">transmission@thevoid.studio</p>
+</div>
+<div class="bg-surface-container-low rounded-xl p-8 transition-colors duration-500 hover:bg-surface-container-highest group">
+<span class="material-symbols-outlined text-on-surface-variant mb-6 text-3xl group-hover:text-primary transition-colors duration-300" style="font-variation-settings: 'FILL' 0;">location_on</span>
+<h3 class="font-headline text-sm uppercase tracking-tight-heading text-on-surface-variant mb-2">Global HQ</h3>
+<p class="text-on-surface">Sector 4, Neo-Reykjavik</p>
+</div>
+</div>
+</div>
+<!-- Right Column: Minimalist Form -->
+<div class="lg:col-span-6 lg:col-start-7 pt-8 lg:pt-0">
+<form class="flex flex-col gap-16 w-full max-w-2xl ml-auto">
+<!-- Input Group -->
+<div class="relative group">
+<label class="font-headline text-xs uppercase tracking-widest text-on-surface-variant absolute -top-5 left-0 transition-opacity duration-300 opacity-50 group-focus-within:opacity-100 group-focus-within:text-tertiary" for="name">Designation</label>
+<input class="w-full bg-transparent border-0 border-b border-outline-variant/30 py-4 px-0 text-on-surface text-xl placeholder:text-on-surface-variant/30 focus:ring-0 focus:border-tertiary/50 transition-colors duration-300 rounded-none appearance-none" id="name" name="name" placeholder="Enter your full name" type="text"/>
+</div>
+<!-- Input Group -->
+<div class="relative group">
+<label class="font-headline text-xs uppercase tracking-widest text-on-surface-variant absolute -top-5 left-0 transition-opacity duration-300 opacity-50 group-focus-within:opacity-100 group-focus-within:text-tertiary" for="email">Comm Link</label>
+<input class="w-full bg-transparent border-0 border-b border-outline-variant/30 py-4 px-0 text-on-surface text-xl placeholder:text-on-surface-variant/30 focus:ring-0 focus:border-tertiary/50 transition-colors duration-300 rounded-none appearance-none" id="email" name="email" placeholder="email@address.com" type="email"/>
+</div>
+<!-- Input Group -->
+<div class="relative group">
+<label class="font-headline text-xs uppercase tracking-widest text-on-surface-variant absolute -top-5 left-0 transition-opacity duration-300 opacity-50 group-focus-within:opacity-100 group-focus-within:text-tertiary" for="subject">Subject</label>
+<input class="w-full bg-transparent border-0 border-b border-outline-variant/30 py-4 px-0 text-on-surface text-xl placeholder:text-on-surface-variant/30 focus:ring-0 focus:border-tertiary/50 transition-colors duration-300 rounded-none appearance-none" id="subject" name="subject" placeholder="Nature of inquiry" type="text"/>
+</div>
+<!-- Textarea Group -->
+<div class="relative group mt-4">
+<label class="font-headline text-xs uppercase tracking-widest text-on-surface-variant absolute -top-5 left-0 transition-opacity duration-300 opacity-50 group-focus-within:opacity-100 group-focus-within:text-tertiary" for="message">Transmission Payload</label>
+<textarea class="w-full bg-transparent border-0 border-b border-outline-variant/30 py-4 px-0 text-on-surface text-xl placeholder:text-on-surface-variant/30 focus:ring-0 focus:border-tertiary/50 transition-colors duration-300 rounded-none appearance-none resize-none" id="message" name="message" placeholder="Detail your request..." rows="4"></textarea>
+</div>
+<!-- Submit Action -->
+<div class="pt-8 flex justify-end">
+<button class="bg-primary text-on-primary font-headline uppercase tracking-tight-heading text-sm px-10 py-5 rounded-md hover:shadow-[0_0_20px_rgba(198,198,199,0.3)] transition-all duration-300 flex items-center gap-3" type="button">
+                        Transmit Signal
+                        <span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">arrow_forward</span>
+</button>
+</div>
+</form>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-[#0e0e0e] dark:bg-[#0e0e0e] w-full py-24 mt-auto bg-gradient-to-t from-[#131313] to-transparent relative z-10">
+<div class="flex flex-col md:flex-row justify-between items-center gap-8 px-12 max-w-[1440px] mx-auto">
+<div class="text-lg font-bold tracking-tighter text-[#c6c6c7]">
+                VOID
+            </div>
+<nav class="flex flex-wrap justify-center gap-6 md:gap-12 font-['Inter'] tracking-[-0.01em] text-xs uppercase text-[#484848]">
+<a class="hover:text-[#c6c6c7] transition-colors duration-500" href="#">Privacy</a>
+<a class="hover:text-[#c6c6c7] transition-colors duration-500" href="#">Terms</a>
+<a class="hover:text-[#c6c6c7] transition-colors duration-500" href="#">Journal</a>
+<a class="hover:text-[#c6c6c7] transition-colors duration-500" href="#">Studio</a>
+</nav>
+<div class="font-['Inter'] tracking-[-0.01em] text-xs uppercase text-[#ababab]">
+                © 2024 THE CELESTIAL VOID. ALL RIGHTS RESERVED.
+            </div>
+</div>
+</footer>
+</body></html>

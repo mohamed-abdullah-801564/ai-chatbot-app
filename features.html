@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Features - The Celestial Void</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "error-container": "#7f2927",
+                    "surface-container-low": "#131313",
+                    "surface-variant": "#262626",
+                    "primary-dim": "#b8b9b9",
+                    "inverse-surface": "#f9f9f9",
+                    "on-surface": "#e5e5e5",
+                    "error-dim": "#bb5551",
+                    "on-surface-variant": "#ababab",
+                    "tertiary-fixed": "#2b70fd",
+                    "on-secondary-container": "#c1bfbe",
+                    "on-background": "#e5e5e5",
+                    "tertiary-fixed-dim": "#1063f0",
+                    "surface": "#0e0e0e",
+                    "on-tertiary-fixed": "#ffffff",
+                    "tertiary": "#749aff",
+                    "on-secondary-fixed": "#403f3f",
+                    "primary-fixed-dim": "#d4d4d4",
+                    "error": "#ee7d77",
+                    "outline": "#757575",
+                    "on-tertiary-fixed-variant": "#edefff",
+                    "surface-tint": "#c6c6c7",
+                    "on-primary-fixed-variant": "#5a5c5c",
+                    "on-primary-fixed": "#3e4040",
+                    "inverse-on-surface": "#555555",
+                    "primary": "#c6c6c7",
+                    "secondary-fixed-dim": "#d7d4d3",
+                    "surface-bright": "#2c2c2c",
+                    "on-error-container": "#ff9993",
+                    "on-error": "#490106",
+                    "secondary": "#9f9d9d",
+                    "surface-dim": "#0e0e0e",
+                    "primary-container": "#454747",
+                    "surface-container-highest": "#262626",
+                    "surface-container": "#191919",
+                    "background": "#0e0e0e",
+                    "inverse-primary": "#5e5f60",
+                    "secondary-fixed": "#e5e2e1",
+                    "on-secondary": "#202020",
+                    "surface-container-lowest": "#000000",
+                    "on-tertiary-container": "#000000",
+                    "on-secondary-fixed-variant": "#5c5b5b",
+                    "secondary-dim": "#9f9d9d",
+                    "on-primary-container": "#d0d0d0",
+                    "surface-container-high": "#1f1f1f",
+                    "primary-fixed": "#e2e2e2",
+                    "tertiary-dim": "#226bf8",
+                    "secondary-container": "#3c3b3b",
+                    "on-tertiary": "#001c52",
+                    "on-primary": "#3f4041",
+                    "tertiary-container": "#2b70fd",
+                    "outline-variant": "#484848"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {},
+            "fontFamily": {
+                    "headline": [
+                            "Inter"
+                    ],
+                    "body": [
+                            "Inter"
+                    ],
+                    "label": [
+                            "Inter"
+                    ]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 200, 'GRAD' 0, 'opsz' 24; }
+        
+        /* Ambient Background Orb */
+        .ambient-orb {
+            position: fixed;
+            top: 20%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            height: 600px;
+            background: #749aff;
+            opacity: 0.05;
+            filter: blur(150px);
+            z-index: -1;
+            pointer-events: none;
+            border-radius: 50%;
+        }
+
+        /* Tonal Transition for Edge Definition instead of solid lines */
+        .tonal-edge-bottom {
+            background: linear-gradient(to bottom, transparent, rgba(19, 19, 19, 0.8));
+            height: 1px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface antialiased min-h-screen flex flex-col overflow-x-hidden selection:bg-primary-container selection:text-on-primary-container">
+<div class="ambient-orb"></div>
+<!-- TopNavBar (Glassmorphic) -->
+<nav class="fixed top-0 left-0 w-full z-50 h-20 bg-[#191919]/70 dark:bg-[#191919]/70 backdrop-blur-2xl shadow-[0_0_64px_rgba(0,0,0,0.5)]">
+<div class="flex justify-between items-center w-full px-12 max-w-[1920px] mx-auto h-full">
+<a class="text-2xl font-black tracking-[-0.06em] text-[#c6c6c7] dark:text-white" href="#">VOID</a>
+<div class="hidden md:flex gap-8 items-center font-['Inter'] tracking-[-0.04em] text-sm uppercase">
+<a class="text-[#ababab] dark:text-[#ababab] transition-colors hover:text-white hover:bg-white/5 rounded-md px-3 py-1 transition-all duration-500 scale-95 transition-transform duration-300" href="#">Home</a>
+<a class="text-[#c6c6c7] dark:text-white border-b border-[#c6c6c7]/30 pb-1 hover:text-white hover:bg-white/5 rounded-md px-3 py-1 transition-all duration-500 scale-95 transition-transform duration-300" href="#">Features</a>
+<a class="text-[#ababab] dark:text-[#ababab] transition-colors hover:text-white hover:bg-white/5 rounded-md px-3 py-1 transition-all duration-500 scale-95 transition-transform duration-300" href="#">Pricing</a>
+<a class="text-[#ababab] dark:text-[#ababab] transition-colors hover:text-white hover:bg-white/5 rounded-md px-3 py-1 transition-all duration-500 scale-95 transition-transform duration-300" href="#">Contact</a>
+</div>
+<div class="flex items-center gap-6">
+<button class="font-['Inter'] tracking-[-0.04em] text-sm uppercase text-[#c6c6c7] dark:text-[#c6c6c7] hidden sm:block">Get Access</button>
+<button class="text-[#c6c6c7] dark:text-[#c6c6c7]">
+<span class="material-symbols-outlined text-2xl" data-icon="menu">menu</span>
+</button>
+</div>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="flex-grow pt-40 pb-48 px-6 md:px-12 lg:px-24 max-w-[1920px] mx-auto w-full relative">
+<!-- Hero Display -->
+<header class="mb-48 text-center md:text-left max-w-4xl">
+<h1 class="text-6xl md:text-8xl lg:text-9xl font-headline font-black tracking-[-0.04em] text-primary leading-[0.85] mb-8">
+                ARCHITECT<br/>THE UNSEEN
+            </h1>
+<p class="text-xl md:text-2xl font-body tracking-[-0.01em] text-on-surface-variant font-light max-w-2xl">
+                Features designed for the curated mind. A system that removes friction to reveal pure intent.
+            </p>
+</header>
+<!-- Asymmetric Features Grid -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-16 lg:gap-32">
+<!-- Feature 1: The Void (Large Left Anchor) -->
+<section class="md:col-span-7 flex flex-col justify-center">
+<div class="p-12 md:p-16 rounded-xl bg-surface-container-low transition-colors duration-700 hover:bg-surface-container-highest group relative overflow-hidden">
+<div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-tertiary/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-1000"></div>
+<span class="material-symbols-outlined text-4xl md:text-5xl text-primary mb-8 block font-light" data-icon="blur_on">blur_on</span>
+<h2 class="text-3xl md:text-4xl font-headline font-semibold tracking-[-0.04em] text-primary mb-6">Absolute Silence</h2>
+<p class="text-lg font-body tracking-[-0.01em] text-on-surface-variant leading-relaxed">
+                        We eliminated noise. Every pixel that doesn't serve a critical function has been meticulously excised, leaving a canvas of hyper-focused utility.
+                    </p>
+<div class="mt-12 h-px w-full bg-gradient-to-r from-outline-variant/30 to-transparent"></div>
+</div>
+</section>
+<!-- Feature 2: Speed (Right Offset) -->
+<section class="md:col-span-5 flex flex-col justify-end md:mt-48">
+<div class="p-10 rounded-xl bg-surface-container-low transition-colors duration-700 hover:bg-surface-container-highest group">
+<span class="material-symbols-outlined text-3xl text-primary mb-6 block font-light" data-icon="bolt">bolt</span>
+<h3 class="text-2xl font-headline font-semibold tracking-[-0.04em] text-primary mb-4">Neural Latency</h3>
+<p class="text-base font-body tracking-[-0.01em] text-on-surface-variant leading-relaxed">
+                        Interactions resolve before conscious thought completes. Built on an architecture that anticipates state changes instantaneously.
+                    </p>
+</div>
+</section>
+<!-- Feature 3: Scale (Left Offset) -->
+<section class="md:col-span-5 flex flex-col justify-start md:-mt-32">
+<div class="p-10 rounded-xl bg-surface-container-low transition-colors duration-700 hover:bg-surface-container-highest group">
+<span class="material-symbols-outlined text-3xl text-primary mb-6 block font-light" data-icon="all_inclusive">all_inclusive</span>
+<h3 class="text-2xl font-headline font-semibold tracking-[-0.04em] text-primary mb-4">Infinite Horizon</h3>
+<p class="text-base font-body tracking-[-0.01em] text-on-surface-variant leading-relaxed">
+                        Scale without structural degradation. The underlying grid expands elastically to accommodate exponential data density.
+                    </p>
+</div>
+</section>
+<!-- Feature 4: Security (Large Right Anchor) -->
+<section class="md:col-span-7 flex flex-col justify-center">
+<div class="p-12 md:p-16 rounded-xl bg-surface-container-low transition-colors duration-700 hover:bg-surface-container-highest group relative overflow-hidden">
+<span class="material-symbols-outlined text-4xl md:text-5xl text-primary mb-8 block font-light" data-icon="fingerprint">fingerprint</span>
+<h2 class="text-3xl md:text-4xl font-headline font-semibold tracking-[-0.04em] text-primary mb-6">Cryptographic Core</h2>
+<p class="text-lg font-body tracking-[-0.01em] text-on-surface-variant leading-relaxed">
+                        Your data exists within a sealed vacuum. End-to-end encryption woven into the foundational layer, invisible yet impenetrable.
+                    </p>
+<div class="mt-12 h-px w-full bg-gradient-to-l from-outline-variant/30 to-transparent"></div>
+</div>
+</section>
+<!-- Full Width Image Interstitial -->
+<section class="col-span-1 md:col-span-12 mt-32 mb-16">
+<div class="w-full h-[614px] rounded-xl overflow-hidden relative border border-outline-variant/15">
+<img alt="Abstract dark geometric architecture with subtle light beams" class="w-full h-full object-cover opacity-60 mix-blend-luminosity" data-alt="abstract dark geometric architecture with subtle cool light beams piercing through structural gaps, high contrast, cinematic mood" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB5_UgpHkpY-zdODNkiDhWtYGhWTWhMzt0qwFSUjFU6gbnfUnzMol3qpVoAHmHkmvDQZpak00JB2TEc1N0uQdkc3oHUJTmLLpZgnm-3jcFlhJ6tMjjWEjAV_bqxlD47YQtvrugJnuLnc33PgrRAkotcYm5m75nua7Xx43RiNFvDhY1WmThKcBeBqZXQUJB1ErkN-vslWeymmd8DPyVGuCX3Bq8STIF-yCBcL0lVXb8Sluz6uGcrs_bNUCZJt6NnhFaIqpnepeA-nlDb"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface via-transparent to-surface opacity-80"></div>
+<div class="absolute bottom-12 left-12 right-12">
+<h3 class="text-4xl md:text-5xl font-headline font-semibold tracking-[-0.04em] text-primary mb-4 max-w-3xl">Design is not how it looks.<br/>It is how it works.</h3>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- Footer (Minimal) -->
+<footer class="w-full py-24 mt-auto bg-[#0e0e0e] dark:bg-[#0e0e0e] bg-gradient-to-t from-[#131313] to-transparent">
+<div class="flex flex-col md:flex-row justify-between items-center gap-8 px-12 max-w-[1440px] mx-auto">
+<div class="text-lg font-bold tracking-tighter text-[#c6c6c7]">
+                VOID
+            </div>
+<div class="flex flex-wrap justify-center gap-8 font-['Inter'] tracking-[-0.01em] text-xs uppercase text-[#ababab]">
+<a class="text-[#484848] hover:text-[#c6c6c7] transition-colors duration-500" href="#">Privacy</a>
+<a class="text-[#484848] hover:text-[#c6c6c7] transition-colors duration-500" href="#">Terms</a>
+<a class="text-[#484848] hover:text-[#c6c6c7] transition-colors duration-500" href="#">Journal</a>
+<a class="text-[#484848] hover:text-[#c6c6c7] transition-colors duration-500" href="#">Studio</a>
+</div>
+<div class="font-['Inter'] tracking-[-0.01em] text-xs uppercase text-[#ababab]">
+                © 2024 THE CELESTIAL VOID. ALL RIGHTS RESERVED.
+            </div>
+</div>
+</footer>
+</body></html>

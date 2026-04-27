@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>The Celestial Void - Home</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "error-container": "#7f2927",
+                        "surface-container-low": "#131313",
+                        "surface-variant": "#262626",
+                        "primary-dim": "#b8b9b9",
+                        "inverse-surface": "#f9f9f9",
+                        "on-surface": "#e5e5e5",
+                        "error-dim": "#bb5551",
+                        "on-surface-variant": "#ababab",
+                        "tertiary-fixed": "#2b70fd",
+                        "on-secondary-container": "#c1bfbe",
+                        "on-background": "#e5e5e5",
+                        "tertiary-fixed-dim": "#1063f0",
+                        "surface": "#0e0e0e",
+                        "on-tertiary-fixed": "#ffffff",
+                        "tertiary": "#749aff",
+                        "on-secondary-fixed": "#403f3f",
+                        "primary-fixed-dim": "#d4d4d4",
+                        "error": "#ee7d77",
+                        "outline": "#757575",
+                        "on-tertiary-fixed-variant": "#edefff",
+                        "surface-tint": "#c6c6c7",
+                        "on-primary-fixed-variant": "#5a5c5c",
+                        "on-primary-fixed": "#3e4040",
+                        "inverse-on-surface": "#555555",
+                        "primary": "#c6c6c7",
+                        "secondary-fixed-dim": "#d7d4d3",
+                        "surface-bright": "#2c2c2c",
+                        "on-error-container": "#ff9993",
+                        "on-error": "#490106",
+                        "secondary": "#9f9d9d",
+                        "surface-dim": "#0e0e0e",
+                        "primary-container": "#454747",
+                        "surface-container-highest": "#262626",
+                        "surface-container": "#191919",
+                        "background": "#0e0e0e",
+                        "inverse-primary": "#5e5f60",
+                        "secondary-fixed": "#e5e2e1",
+                        "on-secondary": "#202020",
+                        "surface-container-lowest": "#000000",
+                        "on-tertiary-container": "#000000",
+                        "on-secondary-fixed-variant": "#5c5b5b",
+                        "secondary-dim": "#9f9d9d",
+                        "on-primary-container": "#d0d0d0",
+                        "surface-container-high": "#1f1f1f",
+                        "primary-fixed": "#e2e2e2",
+                        "tertiary-dim": "#226bf8",
+                        "secondary-container": "#3c3b3b",
+                        "on-tertiary": "#001c52",
+                        "on-primary": "#3f4041",
+                        "tertiary-container": "#2b70fd",
+                        "outline-variant": "#484848"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {},
+                    "fontFamily": {
+                        "headline": ["Inter"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            background-color: #0e0e0e;
+            color: #e5e5e5;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+        
+        .ambient-orb {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60vw;
+            height: 60vw;
+            max-width: 800px;
+            max-height: 800px;
+            background: radial-gradient(circle, rgba(116, 154, 255, 0.1) 0%, rgba(14, 14, 14, 0) 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: -1;
+            filter: blur(150px);
+        }
+
+        .hero-glow {
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        
+        .hero-glow:hover {
+            box-shadow: 0 0 20px rgba(198, 198, 199, 0.3);
+            background: radial-gradient(circle at center, #c6c6c7 0%, #b8b9b9 100%);
+        }
+
+        .ghost-border {
+            border: 1px solid rgba(72, 72, 72, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .ghost-border:hover {
+            border-color: rgba(72, 72, 72, 0.4);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col antialiased selection:bg-tertiary-dim selection:text-white relative">
+<!-- Ambient Orb Background -->
+<div class="ambient-orb"></div>
+<!-- TopNavBar -->
+<nav class="fixed top-0 left-0 w-full z-50 h-20 bg-[#191919]/70 dark:bg-[#191919]/70 backdrop-blur-2xl shadow-[0_0_64px_rgba(0,0,0,0.5)]">
+<div class="flex justify-between items-center w-full px-12 max-w-[1920px] mx-auto h-full">
+<div class="text-2xl font-black tracking-[-0.06em] text-[#c6c6c7] dark:text-white uppercase font-['Inter']">
+                VOID
+            </div>
+<div class="hidden md:flex gap-8 font-['Inter'] tracking-[-0.04em] text-sm uppercase">
+<a class="text-[#c6c6c7] dark:text-white border-b border-[#c6c6c7]/30 pb-1" href="#">Home</a>
+<a class="text-[#ababab] dark:text-[#ababab] transition-colors hover:text-white hover:bg-white/5 rounded-md px-3 py-1 transition-all duration-500" href="#">Features</a>
+<a class="text-[#ababab] dark:text-[#ababab] transition-colors hover:text-white hover:bg-white/5 rounded-md px-3 py-1 transition-all duration-500" href="#">Pricing</a>
+<a class="text-[#ababab] dark:text-[#ababab] transition-colors hover:text-white hover:bg-white/5 rounded-md px-3 py-1 transition-all duration-500" href="#">Contact</a>
+</div>
+<div class="flex items-center gap-6">
+<button class="hidden md:block font-['Inter'] tracking-[-0.04em] text-sm uppercase text-[#c6c6c7] hover:text-white transition-colors">
+                    Get Access
+                </button>
+<button class="text-[#c6c6c7] hover:text-white transition-colors md:hidden">
+<span class="material-symbols-outlined" data-icon="menu">menu</span>
+</button>
+</div>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="flex-grow flex flex-col justify-center items-center px-6 pt-32 pb-24 relative z-10 w-full max-w-[1920px] mx-auto">
+<!-- Hero Section -->
+<section class="w-full flex flex-col items-center text-center max-w-5xl mx-auto my-auto py-24">
+<h1 class="text-6xl md:text-8xl lg:text-9xl font-bold tracking-[-0.04em] text-primary leading-tight mb-8">
+                THE DIGITAL<br/>CURATOR
+            </h1>
+<p class="text-lg md:text-xl text-on-surface-variant font-['Inter'] tracking-[-0.01em] max-w-2xl mb-16 leading-relaxed">
+                Experience the void. A gallery-grade platform designed for the elite, rejecting clutter in favor of absolute clarity and intentional asymmetry.
+            </p>
+<div class="flex flex-col sm:flex-row items-center gap-6">
+<button class="hero-glow bg-primary text-on-primary px-8 py-4 rounded-md font-['Inter'] tracking-[-0.01em] text-sm uppercase font-semibold w-full sm:w-auto" onclick="window.onGetStarted &amp;&amp; window.onGetStarted()">
+                    Enter the Void
+                </button>
+<button class="ghost-border bg-transparent text-primary px-8 py-4 rounded-md font-['Inter'] tracking-[-0.01em] text-sm uppercase font-medium w-full sm:w-auto hover:text-white" onclick="window.onStartGuestChat &amp;&amp; window.onStartGuestChat()">
+                    Explore Guest Access
+                </button>
+</div>
+<div class="mt-24 w-full h-[600px] rounded-xl overflow-hidden relative border border-outline-variant/15 bg-surface-container-low shadow-[0_0_64px_rgba(0,0,0,0.5)]">
+<img alt="Abstract dark minimalist geometry" class="w-full h-full object-cover opacity-80 mix-blend-luminosity" data-alt="abstract dark minimalist architectural shapes with soft glowing light and deep shadows creating a premium gallery aesthetic" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAKp0uJ_y9ztubFz8N2KSUkbHbo5mlyhZEGPCaKUptP3vzMV4EgIzS3p-HleilfRELW5P9W4NtI5GCRjWyim2YLcj0Dd6rbYbkO_Fa4IhQZowEcsp-KWzNBClQvUKDKzozaQahp9Gig5q-RqE-lFipuGBDZlHTLLjZEYV3HnelzqHv0AKtN1v5lzsQ25CnkHfciZL1MQsOO_pnuBuzP30iSQCg_uQO2StZNCNK4kjz2_J0zUE4Z2Csu6grNiNiTTS-cbOHmLD0pyyFK"/>
+</div>
+</section>
+<!-- Bento Grid Feature Section -->
+<section class="w-full max-w-7xl mx-auto py-24 px-6 lg:px-12">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Large Card -->
+<div class="md:col-span-2 bg-surface-container-low rounded-xl p-12 relative overflow-hidden group hover:bg-surface-container-highest transition-colors duration-500 border border-outline-variant/15 hover:border-outline-variant/40 flex flex-col justify-between min-h-[400px]">
+<div class="absolute top-0 right-0 w-64 h-64 bg-tertiary/10 blur-[100px] rounded-full group-hover:bg-tertiary/20 transition-all duration-700"></div>
+<div>
+<span class="material-symbols-outlined text-primary mb-6" data-icon="architecture" style="font-variation-settings: 'FILL' 1;">architecture</span>
+<h3 class="text-3xl font-bold tracking-[-0.04em] text-primary mb-4">Structural Integrity</h3>
+<p class="text-on-surface-variant tracking-[-0.01em] max-w-md">Built on a foundation of absolute blacks and monochromatic grays, creating a deep, pressurized vacuum where content floats.</p>
+</div>
+</div>
+<!-- Small Card 1 -->
+<div class="bg-surface-container-low rounded-xl p-8 group hover:bg-surface-container-highest transition-colors duration-500 border border-outline-variant/15 hover:border-outline-variant/40 flex flex-col">
+<span class="material-symbols-outlined text-primary mb-6" data-icon="contrast">contrast</span>
+<h3 class="text-xl font-bold tracking-[-0.04em] text-primary mb-3">Tonal Depth</h3>
+<p class="text-on-surface-variant tracking-[-0.01em] text-sm">Rejecting flat surfaces for soft, ambient diffusion and subtle gradients.</p>
+</div>
+<!-- Small Card 2 -->
+<div class="bg-surface-container-low rounded-xl p-8 group hover:bg-surface-container-highest transition-colors duration-500 border border-outline-variant/15 hover:border-outline-variant/40 flex flex-col">
+<span class="material-symbols-outlined text-primary mb-6" data-icon="texture">texture</span>
+<h3 class="text-xl font-bold tracking-[-0.04em] text-primary mb-3">Glassmorphism</h3>
+<p class="text-on-surface-variant tracking-[-0.01em] text-sm">Premium frosted textures that allow underlying layers to whisper through.</p>
+</div>
+<!-- Medium Card (Spans 2 on desktop) -->
+<div class="md:col-span-2 bg-surface-container-low rounded-xl p-8 group hover:bg-surface-container-highest transition-colors duration-500 border border-outline-variant/15 hover:border-outline-variant/40 flex items-center justify-between">
+<div>
+<h3 class="text-2xl font-bold tracking-[-0.04em] text-primary mb-2">Intentional Asymmetry</h3>
+<p class="text-on-surface-variant tracking-[-0.01em] text-sm max-w-sm">Offsetting large display type against expansive negative space.</p>
+</div>
+<button class="hidden md:flex items-center justify-center w-12 h-12 rounded-full border border-outline-variant/20 text-primary group-hover:bg-primary group-hover:text-on-primary transition-all duration-300" onclick="window.onGuestDashboard &amp;&amp; window.onGuestDashboard()">
+<span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full py-24 mt-auto bg-[#0e0e0e] dark:bg-[#0e0e0e] bg-gradient-to-t from-[#131313] to-transparent">
+<div class="flex flex-col md:flex-row justify-between items-center gap-8 px-12 max-w-[1440px] mx-auto">
+<div class="text-lg font-bold tracking-tighter text-[#c6c6c7] font-['Inter']">
+                VOID
+            </div>
+<div class="flex gap-6 font-['Inter'] tracking-[-0.01em] text-xs uppercase">
+<a class="text-[#484848] hover:text-[#c6c6c7] transition-colors duration-500" href="#">Privacy</a>
+<a class="text-[#484848] hover:text-[#c6c6c7] transition-colors duration-500" href="#">Terms</a>
+<a class="text-[#484848] hover:text-[#c6c6c7] transition-colors duration-500" href="#">Journal</a>
+<a class="text-[#484848] hover:text-[#c6c6c7] transition-colors duration-500" href="#">Studio</a>
+</div>
+<div class="text-[#ababab] font-['Inter'] tracking-[-0.01em] text-xs uppercase">
+                © 2024 THE CELESTIAL VOID. ALL RIGHTS RESERVED.
+            </div>
+</div>
+</footer>
+</body></html>
