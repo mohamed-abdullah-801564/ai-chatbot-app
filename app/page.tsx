@@ -26,6 +26,19 @@ export default function Home() {
     }
   }, [session, loading, appState])
 
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const upgraded = params.get('upgraded');
+    const success = params.get('success');
+    
+    if (success === 'true' && upgraded === 'true' && session) {
+      // Clean the URL
+      window.history.replaceState({}, '', '/');
+      // Go to chat
+      setAppState('chat');
+    }
+  }, [session]);
+
   const handleGetStarted = useCallback(() => {
     setAppState("sign-in")
   }, [])

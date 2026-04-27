@@ -56,7 +56,7 @@ export async function POST(req: Request) {
                 },
             ],
             mode: 'subscription',
-            success_url: `${process.env.NEXT_PUBLIC_APP_URL}/?success=true`,
+            success_url: `${process.env.NEXT_PUBLIC_APP_URL}/?success=true&upgraded=true`,
             cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/?canceled=true`,
             metadata: {
                 userId: user.id,
